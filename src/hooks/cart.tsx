@@ -37,7 +37,26 @@ const CartProvider: React.FC = ({ children }) => {
   }, []);
 
   const addToCart = useCallback(async product => {
-    // TODO ADD A NEW ITEM TO THE CART
+    setProducts(prevState => {
+      const [productExists] = prevState.filter(
+        prevProduct => prevProduct.id === product.id,
+      );
+
+      if (!productExists) {
+        return [...prevState, { ...product, quantity: 1 }];
+      }
+
+      return prevState.map(prevProduct => {
+        if (prevProduct.id === productExists.id) {
+          return {
+            ...prevProduct,
+            quantity: prevProduct.quantity + 1,
+          };
+        }
+
+        return prevProduct;
+      });
+    });
   }, []);
 
   const increment = useCallback(async id => {
